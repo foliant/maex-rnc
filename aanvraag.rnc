@@ -1,0 +1,305 @@
+# relaxng compact schema voor (deel van) Fdn aanvraag
+# author: Ferdi Hulleman (ferdi@xs4all.nl)
+# Notes: & interleaving: when order of elements is not important
+#        ? optional
+#	 + once or more
+
+
+# common definitions
+INTEGER = text
+BEDRAG = xsd:token { pattern = "([1-9][0-9]*)|([0-9]+\.[0-9]{2})" }
+TELEFOONNR = xsd:token { pattern = "(\+[1-9]{1,3})?[0-9 \-]*" maxLength = "15" }
+anyElement = 
+   element * {
+      (
+         attribute * { text } | 
+         text | 
+         anyElement
+      )* 
+   }
+
+# start of main schema
+start = Aanvraagbericht
+
+Aanvraagbericht =
+  element Aanvraagbericht { 
+    attlist.Aanvraagbericht,
+    Header?,
+    FdnAanvrager+,
+    KredietAanvraag,
+    VrijeTekst
+  }
+attlist.Aanvraagbericht &= attribute Volgnummer { xsd:integer }?
+
+#for now we don't care about the header and algemeen parts
+Header = element Header { empty, anyElement* }
+    
+FdnAanvrager =
+  element FdnAanvrager {
+     attlist.FdnAanvrager
+   & SoortAanvrager
+   & EmailAdres?
+   & AchterNaam
+   & VoorLetters
+   & VoorVoegsel?
+   & GebNaam?
+   & VoorVoegselGebNaam?
+   & WoonachtigHuidigDt?
+   & TelBereikbaar?
+   & TelefoonNrPrive?
+   & TelefoonNrMobiel?
+   & RekeningNr?
+   & GeboorteDt
+   & Nationaliteit
+   & Geslacht
+   & Adres*
+   & Legitimatiebewijs?	
+   & Werksituatie 
+   & Gezinssituatie 
+   & FinancieleSituatie
+   & Lening*  
+  }
+attlist.FdnAanvrager &= attribute Volgnummer { xsd:integer }
+SoortAanvrager = element SoortAanvrager { empty, ("01" | "02" | "03") }
+EmailAdres = element EmailAdres { 
+	empty, 
+	xsd:token { 
+	  pattern = ".*@\c+\.([a-zA-Z]{2}|com|net|org|edu|int|mil|gov|arpa|biz|aero|name|coop|info|pro|museum|asia|cat|jobs|mobi|tel|travel)" 
+	  maxLength = "256" 
+	}
+}
+AchterNaam = element AchterNaam { empty, text }
+VoorLetters = element VoorLetters { empty, text }
+VoorVoegsel = element VoorVoegsel { empty, text }
+GebNaam = element GebNaam { empty, text }
+VoorVoegselGebNaam = element VoorVoegselGebNaam {empty, text }
+GeboorteDt = element GeboorteDt { empty, Dag, Maand, Jaar }
+Dag = element Dag { attlist.Dag, INTEGER }
+attlist.Dag &= empty
+Maand = element Maand { attlist.Maand, INTEGER }
+attlist.Maand &= empty
+Jaar = element Jaar { attlist.Jaar, INTEGER }
+attlist.Jaar &= empty
+Nationaliteit = element Nationaliteit { attlist.Nationaliteit, text }
+attlist.Nationaliteit &= empty
+Geslacht = element Geslacht { attlist.Geslacht, text }
+attlist.Geslacht &= empty
+Gezinssituatie =
+  element Gezinssituatie {
+    attlist.Gezinssituatie
+     & BurgerlijkeStaat
+     & BurgelijkeStaatDt?
+     & HuwelijkseVw?
+     & HuwelijkOntbonden?
+     & WeduweWeduwnaar?
+     & KinderenAantal?
+  }
+attlist.Gezinssituatie &= attribute Volgnummer { xsd:integer }?
+BurgerlijkeStaat =
+  element BurgerlijkeStaat { attlist.BurgerlijkeStaat, ("01" | "02" | "03"| "04"| "05") }
+attlist.BurgerlijkeStaat &= empty
+BurgelijkeStaatDt =
+  element BurgelijkeStaatDt {
+    attlist.BurgelijkeStaatDt, Dag, Maand, Jaar
+  }
+attlist.BurgelijkeStaatDt &= empty
+HuwelijkseVw = element HuwelijkseVw { empty, ("J"| "N") }
+HuwelijkOntbonden = element HuwelijkOntbonden { empty, ("J" | "N") }
+WeduweWeduwnaar = element WeduweWeduwnaar { empty, ("J" | "N") }
+KinderenAantal =
+  element KinderenAantal { attlist.KinderenAantal, INTEGER }
+attlist.KinderenAantal &= empty
+Werksituatie =
+  element Werksituatie {
+    attlist.Werksituatie,
+    Beroep?,
+    AardDienstverband,
+    BeginDienstverbandDt,
+    EindDienstverbandDt?,
+    LaatsteKeuringDt?,
+    NawWerkgeverUitkerendeInstantie
+  }
+attlist.Werksituatie &= attribute Volgnummer { xsd:integer }?
+Beroep = element Beroep { attlist.Beroep, text }
+attlist.Beroep &= empty
+AardDienstverband =
+  element AardDienstverband { attlist.AardDienstverband, xsd:token { pattern = "0[12345678]" }  }
+attlist.AardDienstverband &= empty
+BeginDienstverbandDt =
+  element BeginDienstverbandDt {
+    attlist.BeginDienstverbandDt, Dag, Maand, Jaar
+  }
+attlist.BeginDienstverbandDt &= empty
+EindDienstverbandDt =
+  element EindDienstverbandDt {
+    attlist.EindDienstverbandDt, Dag, Maand, Jaar
+  }
+attlist.EindDienstverbandDt &= empty
+LaatsteKeuringDt =
+  element LaatsteKeuringDt {
+    empty , Dag, Maand, Jaar
+  }
+NawWerkgeverUitkerendeInstantie =
+  element NawWerkgeverUitkerendeInstantie {
+    attlist.NawWerkgeverUitkerendeInstantie, 
+     Naam, 
+     StraatNaam?, 
+     HuisNr?, 
+     HuisNrToevoeging?, 
+     PlaatsNaam?, 
+     Postcode?, 
+     Land?,
+     TelefoonNr?
+  }
+attlist.NawWerkgeverUitkerendeInstantie &= attribute Volgnummer { xsd:integer }? 
+Naam = element Naam { attlist.Naam, text }
+attlist.Naam &= empty
+PlaatsNaam = element PlaatsNaam { attlist.PlaatsNaam, text }
+attlist.PlaatsNaam &= empty
+TelefoonNr = element TelefoonNr { empty, TELEFOONNR}
+Legitimatiebewijs = 
+  element Legitimatiebewijs {
+    attlist.Legitimatiebewijs,
+    Soort,
+    Nummer?,
+    Land	
+  }
+attlist.Legitimatiebewijs &= attribute Volgnummer { xsd:integer }?
+Soort = element Soort { text }
+Nummer = element Nummer { text }
+
+FinancieleSituatie =
+  element FinancieleSituatie {
+    attlist.FinancieleSituatie,
+    elmlist.FinancieleSituatie 
+  }
+elmlist.FinancieleSituatie =  
+      NettoMaandInk?	
+    & OverigNettoMaandInk?
+    & AardOverigInk?
+    & VoorlopigeTeruggaaf?
+    & BedragVoorlopigTerug?
+    & EigenWoning?	
+    & Hypotheek?
+    & BrutoMndHypotheek?
+    & HypotheekRestSchuld?
+    & BedragHypLening?
+    & RentePctHypotheek?
+    & RentevastEindDt?
+    & HypotheekMaatschappij?
+    & VOVwaarde?
+    & HuurMnd?
+    & KostgeldBedrag?
+    & GasWaterLicht?
+    & EigenAuto?
+    & BrutoAlimentatieUitg?
+    & LopendeLeningen?
+
+attlist.FinancieleSituatie &= attribute Volgnummer { xsd:integer }
+NettoMaandInk = element NettoMaandInk { empty, BEDRAG }
+OverigNettoMaandInk = element OverigNettoMaandInk { empty, BEDRAG }
+AardOverigInk = element AardOverigInk { empty , INTEGER }
+BedragHypLening = element BedragHypLening { empty, BEDRAG }
+HypotheekRestSchuld = element HypotheekRestSchuld { empty, BEDRAG }
+RentePctHypotheek = element RentePctHypotheek { empty, text }
+VoorlopigeTeruggaaf = element VoorlopigeTeruggaaf { empty, ("J" | "N") }
+BedragVoorlopigTerug = element BedragVoorlopigTerug { empty, BEDRAG }
+EigenWoning = element EigenWoning { empty, ("J" | "N") }
+Hypotheek = element Hypotheek { empty, ("J" | "N") }
+BrutoMndHypotheek = element BrutoMndHypotheek { empty, BEDRAG }
+RentevastEindDt = 
+   element RentevastEindDt { 
+      empty, 
+      Dag, 
+      Maand, 
+      Jaar 
+   }
+HypotheekMaatschappij = element HypotheekMaatschappij { empty, text }
+VOVwaarde = element VOVwaarde { empty, BEDRAG }
+HuurMnd = element HuurMnd { empty, BEDRAG }
+KostgeldBedrag = element KostgeldBedrag { empty, BEDRAG }
+GasWaterLicht = element GasWaterLicht { empty, BEDRAG }
+EigenAuto = element EigenAuto { empty, ("J" | "N") }
+BrutoAlimentatieUitg = element BrutoAlimentatieUitg { empty, BEDRAG }
+LopendeLeningen = element LopendeLeningen { empty, ("J" | "N") }
+
+Lening =
+  element Lening {
+    attlist.Lening,
+    LeningInlossen,
+    LeningMaatschappij,
+    Contractnummer?,
+    (BedragNogInlossen & BedragMndAflos?)
+  }
+attlist.Lening &= attribute Volgnummer { xsd:integer }
+LeningInlossen = element LeningInlossen { empty, text } | element LeningInLossen { empty, text } 
+LeningMaatschappij =
+  element LeningMaatschappij { attlist.LeningMaatschappij, text }
+attlist.LeningMaatschappij &= empty
+Contractnummer =
+  element Contractnummer { attlist.Contractnummer, xsd:string {maxLength = "35"} }
+attlist.Contractnummer &= empty
+BedragNogInlossen =
+  element BedragNogInlossen { attlist.BedragNogInlossen, INTEGER }
+attlist.BedragNogInlossen &= empty
+BedragMndAflos =
+  element BedragMndAflos { attlist.BedragMndAflos, INTEGER }
+attlist.BedragMndAflos &= empty
+WoonachtigHuidigDt =
+  element WoonachtigHuidigDt {
+    attlist.WoonachtigHuidigDt, Dag, Maand, Jaar
+  }
+attlist.WoonachtigHuidigDt &= empty
+TelBereikbaar = element TelBereikbaar { empty, ( "J" | "N" | "Ja" | "Nee") }
+TelefoonNrPrive = element TelefoonNrPrive { empty, TELEFOONNR }
+TelefoonNrMobiel = element TelefoonNrMobiel { empty, TELEFOONNR }
+RekeningNr = element RekeningNr { empty, xsd:integer }
+Adres =
+  element Adres {
+    attlist.Adres,
+    SoortAdres,
+    ( StraatNaam & HuisNr & PlaatsNaam? & HuisNrToevoeging? ),
+    Postcode,
+    Land
+  }
+attlist.Adres &= attribute Volgnummer { xsd:integer }?
+SoortAdres = element SoortAdres { attlist.SoortAdres, text }?
+attlist.SoortAdres &= empty
+StraatNaam = element StraatNaam { attlist.StraatNaam, text }
+attlist.StraatNaam &= empty
+HuisNr = element HuisNr { attlist.HuisNr, xsd:integer }
+attlist.HuisNr &= empty
+HuisNrToevoeging =
+  element HuisNrToevoeging { attlist.HuisNrToevoeging, text }
+attlist.HuisNrToevoeging &= empty
+Postcode = element Postcode { empty, text }
+Land = element Land { empty, text }?
+
+KredietAanvraag =
+  element KredietAanvraag {
+     attlist.KredietAanvraag, 
+     SoortAanvraag?, 
+     LeningBedrag, 
+     MndAflosBedrag?, 
+     GevrBedrInHanden?, 
+     Bestedingsdoel, 
+     MerkObject?, 
+     TypeObject?, 
+     (KoopsomWaardeObj & BouwjaarObject)?
+  }
+attlist.KredietAanvraag &= attribute Volgnummer { xsd:integer }
+SoortAanvraag = element SoortAanvraag { empty , text }
+LeningBedrag = element LeningBedrag { empty, BEDRAG }
+MndAflosBedrag = element MndAflosBedrag { empty, BEDRAG }
+GevrBedrInHanden = element GevrBedrInHanden { empty, BEDRAG }
+Bestedingsdoel = element Bestedingsdoel { empty , ("01" | "02" | "03"| "04"| "05"| "06"| "07" | "08" | "09" | "10"| "99") }
+MerkObject = element MerkObject { empty, text }
+TypeObject = element TypeObject { empty, text }
+KoopsomWaardeObj = element KoopsomWaardeObj { empty, text }
+BouwjaarObject = element BouwjaarObject { empty, text }
+VrijeTekst = element VrijeTekst { attlist.VrijeTekst, TekstRegel+ }
+attlist.VrijeTekst &= attribute Volgnummer { xsd:integer }
+TekstRegel = element TekstRegel { attlist.TekstRegel, text }
+attlist.TekstRegel &= attribute Volgnummer { xsd:integer }?, attribute Regelnummer { xsd:integer }? 
+
+
