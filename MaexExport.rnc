@@ -1,0 +1,23 @@
+start = ExternMaex
+
+ExternMaex = element ExternMaex {
+   empty,
+   element RedenKode { empty, text },
+   DATUM,
+   element Tijd { empty , text },
+   element Gebruiker { empty, text },
+   element Tekst { empty, text },
+   MaexInfo
+}
+      
+DATUM = element Datum {
+   empty,
+   element Dag { empty, xsd:token { pattern = "([1-9])|([12][0-9])|(3[01])" } },
+   element Maand { empty, xsd:token { pattern = "([1-9])|(1[0-2])" }},
+   element Jaar { empty, xsd:integer }
+}
+
+MaexInfo = element MaexInfo {
+   element Extern_Id { empty, xsd:integer }?,
+   element Aanvraag_Id { empty, xsd:integer } 
+}  
