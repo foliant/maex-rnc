@@ -27,8 +27,8 @@ BedrijfsInfo =
     & Plaats?
     & Telefoonnr?
     & Kvknr?      
+    & DatumOprichting?  
    }
-
 Postkode = element Postkode { empty, text }?
 Huisnr = element Huisnr { empty, text }?
 Huisnr_tv = element Huisnr_tv { empty, text }?
@@ -36,6 +36,12 @@ Kvknr = element Kvknr { empty, xsd:integer }?
 Straat = element Straat { empty, text }?
 Plaats = element Plaats { empty, text }?
 Telefoonnr = element Telefoonnr {empty, TELEFOONNR}?
+DatumOprichting =
+  element DatumOprichting {
+    attlist.DatumOprichting, Dag, Maand, Jaar
+  }
+attlist.DatumOprichting &= empty
+
 
 # Voeg optioneel Intentieverklaring element toe aan Werksituatie
 AardDienstverband &= element IntentieVerklaring { empty , ("1" | "0") }?
@@ -58,11 +64,11 @@ BedragNogInlossen &= element SoortLening { empty, ("AK" | "HY" | "RK" | "RO" | "
 # Toevoegingen aan KredietAanvraag
 GevrBedrInHanden &= element DuurInMnd { xsd:integer }?
 GevrBedrInHanden &= element BallonBedrag { BEDRAG }?
-TypeObject &= element Model { empty, text }
+TypeObject &= element Model { empty, text }?
 BouwjaarObject &= Kenteken
-Kenteken = element Kenteken { empty, text }  
-Kenteken &= element Chassisnr { empty, text }
-Kenteken &= element Inruilbedrag { empty, text }
+Kenteken = element Kenteken { empty, text }? 
+Kenteken &= element Chassisnr { empty, text }?
+Kenteken &= element Inruilbedrag { empty, text }?
 
 # Voeg MaexInfo blok toe aan Aanvraagbericht
 VrijeTekst &= MaexInfo
@@ -70,7 +76,7 @@ VrijeTekst &= MaexInfo
 MaexInfo =
   element MaexInfo {
       empty
-    & (BronOmschrijving | Bron_id)?  
+    & (BronOmschrijving | Bron_id)?	
     & Produkt_id?
     & (Subagent_kode | Subagent_id)?
     & (Status_Kode | Status_id)

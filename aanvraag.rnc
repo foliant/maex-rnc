@@ -50,13 +50,13 @@ FdnAanvrager =
    & TelefoonNrMobiel?
    & RekeningNr?
    & GeboorteDt
-   & Nationaliteit
+   & Nationaliteit?
    & Geslacht
    & Adres*
    & Legitimatiebewijs?	
-   & Werksituatie 
-   & Gezinssituatie 
-   & FinancieleSituatie
+   & Werksituatie? 
+   & Gezinssituatie? 
+   & FinancieleSituatie?
    & Lening*  
   }
 attlist.FdnAanvrager &= attribute Volgnummer { xsd:integer }
@@ -91,6 +91,7 @@ Gezinssituatie =
      & BurgelijkeStaatDt?
      & HuwelijkseVw?
      & HuwelijkOntbonden?
+     & ScheidingDt?
      & WeduweWeduwnaar?
      & KinderenAantal?
   }
@@ -105,6 +106,11 @@ BurgelijkeStaatDt =
 attlist.BurgelijkeStaatDt &= empty
 HuwelijkseVw = element HuwelijkseVw { empty, ("J"| "N") }
 HuwelijkOntbonden = element HuwelijkOntbonden { empty, ("J" | "N") }
+ScheidingDt =
+  element ScheidingDt {
+    attlist.ScheidingDt, Dag, Maand, Jaar
+  }
+attlist.ScheidingDt &= empty
 WeduweWeduwnaar = element WeduweWeduwnaar { empty, ("J" | "N") }
 KinderenAantal =
   element KinderenAantal { attlist.KinderenAantal, INTEGER }
@@ -113,11 +119,11 @@ Werksituatie =
   element Werksituatie {
     attlist.Werksituatie,
     Beroep?,
-    AardDienstverband,
-    BeginDienstverbandDt,
+    AardDienstverband?,
+    BeginDienstverbandDt?,
     EindDienstverbandDt?,
     LaatsteKeuringDt?,
-    NawWerkgeverUitkerendeInstantie
+    NawWerkgeverUitkerendeInstantie?
   }
 attlist.Werksituatie &= attribute Volgnummer { xsd:integer }?
 Beroep = element Beroep { attlist.Beroep, text }
