@@ -201,7 +201,7 @@ elmlist.FinancieleSituatie =
     & BrutoAlimentatieUitg?
     & LopendeLeningen?
 
-attlist.FinancieleSituatie &= attribute Volgnummer { xsd:integer }
+attlist.FinancieleSituatie &= attribute Volgnummer { xsd:integer }?
 NettoMaandInk = element NettoMaandInk { empty, BEDRAG }
 OverigNettoMaandInk = element OverigNettoMaandInk { empty, BEDRAG }
 AardOverigInk = element AardOverigInk { empty , INTEGER }
@@ -293,7 +293,7 @@ KredietAanvraag =
      TypeObject?, 
      (KoopsomWaardeObj & BouwjaarObject)?
   }
-attlist.KredietAanvraag &= attribute Volgnummer { xsd:integer }
+attlist.KredietAanvraag &= attribute Volgnummer { xsd:integer }?
 SoortAanvraag = element SoortAanvraag { empty , text }
 LeningBedrag = element LeningBedrag { empty, BEDRAG }
 MndAflosBedrag = element MndAflosBedrag { empty, BEDRAG }
@@ -304,7 +304,7 @@ TypeObject = element TypeObject { empty, text }
 KoopsomWaardeObj = element KoopsomWaardeObj { empty, text }
 BouwjaarObject = element BouwjaarObject { empty, text }
 VrijeTekst = element VrijeTekst { attlist.VrijeTekst, TekstRegel+ }
-attlist.VrijeTekst &= attribute Volgnummer { xsd:integer }
+attlist.VrijeTekst &= attribute Volgnummer { xsd:integer }?
 TekstRegel = element TekstRegel { attlist.TekstRegel, text }
 attlist.TekstRegel &= attribute Volgnummer { xsd:integer }?, attribute Regelnummer { xsd:integer }? 
 

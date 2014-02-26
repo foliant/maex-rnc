@@ -12,6 +12,7 @@ MaexImport = element MaexImport {
 # Voeg optioneel extern_id (koppeling externe database) en Mailen (mailing gewenst ja/nee) element toe aan aanvrager 
 SoortAanvrager &= element extern_id { empty, xsd:integer }?
 SoortAanvrager &= element Mailen { empty, ("j" | "n") }?
+SoortAanvrager &= element Iban { empty, text }?
 SoortAanvrager &= element SociaalFiscaalNr { empty, xsd:integer }?
 # Voeg ook optioneel Bedrijfsinfo toe
 SoortAanvrager &= BedrijfsInfo?
@@ -62,11 +63,14 @@ BedragNogInlossen &= element LL_RENTPRC { empty, text }?
 BedragNogInlossen &= element SoortLening { empty, ("AK" | "HY" | "RK" | "RO" | "SR" | "VK" | "ZK") }?
 
 # Toevoegingen aan KredietAanvraag
-GevrBedrInHanden &= element DuurInMnd { xsd:integer }?
-GevrBedrInHanden &= element BallonBedrag { BEDRAG }?
+Bestedingsdoel &= element DuurInMnd { xsd:integer }?
+Bestedingsdoel &= element BallonBedrag { BEDRAG }?
 TypeObject &= element Model { empty, text }?
 BouwjaarObject &= Kenteken
 Kenteken = element Kenteken { empty, text }? 
+Kenteken &= element Aanbetaling { BEDRAG }?
+Kenteken &= element Restbedrag { BEDRAG }?
+Kenteken &= element BtwOfMarge { empty, ("B" | "M" )}?
 Kenteken &= element Chassisnr { empty, text }?
 Kenteken &= element Inruilbedrag { empty, text }?
 
@@ -78,9 +82,10 @@ MaexInfo =
       empty
     & (BronOmschrijving | Bron_id)?	
     & Produkt_id?
+    & Produkt_kode?
     & (Subagent_kode | Subagent_id)?
     & (Status_Kode | Status_id)
-    & Tp_id    
+    & Tp_id?   
     & Verkoper_id?
     & (Gebruiker_id | Gebruikers_Kode)?
     & GewenstTermijnBedrag?
@@ -100,6 +105,7 @@ Rappel = element Rappel {
 BronOmschrijving = element BronOmschrijving { empty, text }
 GewenstTermijnBedrag = element GewenstTermijnBedrag { empty, xsd:integer}
 Produkt_id = element produkt_id { empty, xsd:integer }
+Produkt_kode = element Produkt_kode { empty, text }
 Status_Kode = element Status_Kode { empty, text }
 Status_id =  (element Status_id { empty, xsd:integer} | element status_id { empty, xsd:integer})
 Tp_id = ( element Tp_id { empty, xsd:integer} | element tp_id { empty, xsd:integer} )
