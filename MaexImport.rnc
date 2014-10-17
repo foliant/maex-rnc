@@ -1,3 +1,5 @@
+default namespace = ""
+
 # breid Fdn aanvraag schema uit met Maex specifieke elementen
 include "aanvraag.rnc" {
    start = MaexImport  
@@ -69,10 +71,12 @@ TypeObject &= element Model { empty, text }?
 BouwjaarObject &= Kenteken
 Kenteken = element Kenteken { empty, text }? 
 Kenteken &= element Aanbetaling { BEDRAG }?
+Kenteken &= element KmStand { empty, xsd:integer }?
 Kenteken &= element Restbedrag { BEDRAG }?
 Kenteken &= element BtwOfMarge { empty, ("B" | "M" )}?
 Kenteken &= element Chassisnr { empty, text }?
 Kenteken &= element Inruilbedrag { empty, text }?
+Kenteken &= element InExBtw { empty, ("incl" | "excl" )}?
 
 # Voeg MaexInfo blok toe aan Aanvraagbericht
 VrijeTekst &= MaexInfo
